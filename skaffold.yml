@@ -6,7 +6,7 @@ build:
     push: false
   # Generated artifact
   artifacts:
-    - image: spring-jib-skaffold-app
+    - image: rabbitmq-producer
       # Use jibMaven
       jibMaven: {}
 # Execute devops/jib-skaffold.yaml

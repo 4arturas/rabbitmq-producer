@@ -1,3 +1,5 @@
+package demo;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -8,11 +10,17 @@ public class Producer
 {
     private final static String QUEUE_NAME = "hello";
 
+    private static String RABBITQM_RELAY_HOST;
+    private static int RABBITQM_RELAY_PORT;
+
     public static void main(String[] argv) throws Exception
     {
+        RABBITQM_RELAY_HOST = System.getenv("RABBITQM_RELAY_HOST");
+        RABBITQM_RELAY_PORT = Integer.parseInt(System.getenv("RABBITQM_RELAY_PORT"));
+
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("192.168.56.243");
-        factory.setPort(5672);
+        factory.setHost( RABBITQM_RELAY_HOST );
+        factory.setPort( RABBITQM_RELAY_PORT );
 //        factory.setPort(8181);
         try
                 (
@@ -21,7 +29,7 @@ public class Producer
                 )
         {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            for ( int i = 0; i < 1000_000_000; i++ )
+            for ( int i = 0; i < 10; i++ )
             {
                 String message = "" + i;
                 channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
