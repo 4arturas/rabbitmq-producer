@@ -29,7 +29,7 @@
                 <version>2.6.0</version>
                 <configuration>
                     <from>
-                        <image>openjdk:11</image>
+                        <image>azul/zulu-openjdk:11</image>
                     </from>
                     <to>
                         <image>${project.artifactId}</image>
