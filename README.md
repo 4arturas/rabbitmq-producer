@@ -1,5 +1,6 @@
 # rabbitmq-producer
 
+## Simple java application
 ````
 docker build -t img-java-example -f DockerfileJavaExample .
 ````
