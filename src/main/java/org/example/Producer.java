@@ -21,21 +21,34 @@ public class Producer
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost( RABBITQM_RELAY_HOST );
         factory.setPort( RABBITQM_RELAY_PORT );
-//        factory.setPort(8181);
+        System.out.println("####################################");
+
+        Connection connection = null;
+        Channel channel = null;
         try
-                (
-                        Connection connection = factory.newConnection();
-                        Channel channel = connection.createChannel()
-                )
         {
+            connection = factory.newConnection();
+            channel = connection.createChannel();
+
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 String message = "" + i;
+
                 channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
                 System.out.println(" [x] Sent '" + message + "'");
-                Thread.sleep(10);
+
+                Thread.currentThread().sleep(10);
             } // end for
+//            System.exit(0);
+        }
+        finally
+        {
+            if ( channel != null )
+                channel.close();
+
+            if ( connection != null )
+                connection.close();
         }
     }
 }
