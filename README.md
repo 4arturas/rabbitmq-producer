@@ -1,5 +1,13 @@
 # rabbitmq-producer
 
+## Start RabbitMQ
+````
+kubectl apply -f rabbitmq.yaml
+````
+
+## Checkout in brwser management pannel
+http://192.168.99.110:31672/
+
 ## Install local docker registry
 ````
 docker run -d -p 5000:5000 --restart=always --name registry registry:2
@@ -13,7 +21,6 @@ mvn clean install jib:dockerBuild && docker tag rabbitmq-producer localhost:5000
 ````
 docker run -it --rm localhost:5000/rabbitmq-producer
 ````
-
 
 
 ````mermaid
