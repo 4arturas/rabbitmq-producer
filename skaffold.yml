@@ -1,0 +1,16 @@
+apiVersion: skaffold/v1beta4
+kind: Config
+# Enforce Skaffold to use Jib
+build:
+  local:
+    push: false
+  # Generated artifact
+  artifacts:
+    - image: spring-jib-skaffold-app
+      # Use jibMaven
+      jibMaven: {}
+# Execute devops/jib-skaffold.yaml
+deploy:
+  kubectl:
+    manifests:
+      - producer.yaml
