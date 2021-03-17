@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Producer
@@ -31,16 +32,26 @@ public class Producer
             channel = connection.createChannel();
 
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            for ( int i = 0; i < 100; i++ )
+            for ( int i = 0; i < 1000_000_000; i++ )
             {
                 String message = "" + i;
 
-                channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
+                boolean bMessageWasSent = send_Message( channel, message );
+                if ( bMessageWasSent == false )
+                {
+                    connection = factory.newConnection();
+                    channel = connection.createChannel();
+                    System.err.println("#########################");
+                    System.err.println("# Connection was lost, reconnecting");
+                    System.err.println("#########################");
+                }
+
+
                 System.out.println(" [x] Sent '" + message + "'");
 
                 Thread.currentThread().sleep(10);
             } // end for
-//            System.exit(0);
+            System.exit(0);
         }
         finally
         {
@@ -49,6 +60,18 @@ public class Producer
 
             if ( connection != null )
                 connection.close();
+        }
+    }
+
+    static boolean send_Message( Channel channel, String message )
+    {
+        try
+        {
+            channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
+            return true;
+        } catch ( Exception e )
+        {
+            return false;
         }
     }
 }
